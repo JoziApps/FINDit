@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pick Your Birthday Gift!</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --box-color: #e11d48;
+      --ribbon-color: #fbbf24;
+      --text-color: #f8fafc;
+      --card-bg: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #f43f5e, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    /* Container for the 3 boxes */
+    .boxes-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    /* Individual Box Wrapper */
+    .gift-box-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .gift-box {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      background-color: var(--box-color);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+    }
+
+    .gift-box-wrapper:hover .gift-box {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 25px 35px rgba(225, 29, 72, 0.4);
+    }
+
+    /* Box Lid */
+    .gift-lid {
+      position: absolute;
+      top: -20px;
+      left: -10px;
+      width: 180px;
+      height: 35px;
+      background-color: var(--box-color);
+      border-radius: 6px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 2;
+    }
+
+    /* Ribbons */
+    .gift-box::before, .gift-lid::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 100%;
+      background-color: var(--ribbon-color);
+    }
+
+    .gift-box::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 30px;
+      background-color: var(--ribbon-color);
+    }
+
+    /* Animated Open Lid State */
+    .gift-box-wrapper.opened .gift-lid {
+      transform: translateY(-80px) rotate(-20deg) scale(0.9);
+      opacity: 0;
+    }
+
+    .gift-box-wrapper.opened .gift-box {
+      transform: scale(0.95);
+      filter: brightness(0.7);
+    }
+
+    .box-label {
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #e2e8f0;
+    }
+
+    /* Modal Styling for Revealing the Gift */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background-color: var(--card-bg);
+      border: 2px solid #334155;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      transform: scale(0.7) translateY(50px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .gift-image {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 3px solid var(--ribbon-color);
+    }
+
+    .gift-title {
+      font-size: 1.8rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .gift-description {
+      color: #cbd5e1;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .close-btn {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(225, 29, 72, 0.4);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .close-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Simple Particle Effects */
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: var(--ribbon-color);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: pop 0.8s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎉 Pick Your Birthday Present! 🎂</h1>
+  <p class="subtitle">Click on any box below to reveal your surprise gift.</p>
+
+  <div class="boxes-container">
+    <!-- Box 1 -->
+    <div class="gift-box-wrapper" onclick="openBox(0, this)">
+      <div class="gift-box">
+        <div class="gift-lid"></div>
+      </div>
+      <div class="box-label">Box #1</div>
+    </div>
+
+    <!-- Box 2 -->
+    <div class="gift-box-wrapper" onclick="openBox(1, this)">
+      <div class="gift-box">
+        <div class="gift-lid"></div>
+      </div>
+      <div class="box-label">Box #2</div>
+    </div>
+
+    <!-- Box 3 -->
+    <div class="gift-box-wrapper" onclick="openBox(2, this)">
+      <div class="gift-box">
+        <div class="gift-lid"></div>
+      </div>
+      <div class="box-label">Box #3</div>
+    </div>
+  </div>
+
+  <!-- Reveal Modal -->
+  <div class="modal-overlay" id="giftModal">
+    <div class="modal-card">
+      <img id="modalImg" src="" alt="Gift Image" class="gift-image">
+      <h2 id="modalTitle" class="gift-title">Gift Name</h2>
+      <p id="modalDesc" class="gift-description">Gift description goes here.</p>
+      <button class="close-btn" onclick="closeModal()">Awesome!</button>
+    </div>
+  </div>
+
+  <script>
+    // ========================================================
+    // SENDER CONFIGURATION: Customize your gifts here!
+    // ========================================================
+    const gifts = [
+      {
+        name: "Spa & Wellness Day Pass",
+        description: "You've earned a full day of relaxation! Enjoys massage, sauna, and total luxury package on me.",
+        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        name: "Gourmet Dinner Experience",
+        description: "A 3-course dinner at your favorite restaurant of choice. Bon Appétit!",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        name: "Weekend Getaway Ticket",
+        description: "Pack your bags! We are heading out for a weekend adventure away from the city hustle.",
+        image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80"
+      }
+    ];
+
+    let currentOpenedWrapper = null;
+
+    function openBox(index, element) {
+      // Prevent opening multiple boxes at once
+      if (element.classList.contains('opened')) return;
+
+      // Add lid open animation state
+      element.classList.add('opened');
+      currentOpenedWrapper = element;
+
+      // Spawn burst particles
+      createParticles(element);
+
+      // Populate modal data
+      const gift = gifts[index];
+      document.getElementById('modalTitle').innerText = gift.name;
+      document.getElementById('modalDesc').innerText = gift.description;
+      document.getElementById('modalImg').src = gift.image;
+
+      // Delay modal appearance to match animation timing
+      setTimeout(() => {
+        document.getElementById('giftModal').classList.add('active');
+      }, 600);
+    }
+
+    function closeModal() {
+      document.getElementById('giftModal').classList.remove('active');
+    }
+
+    function createParticles(element) {
+      const rect = element.getBoundingClientRect();
+      const count = 30;
+
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random particle directions
+        const dx = (Math.random() - 0.5) * 300 + 'px';
+        const dy = (Math.random() - 0.5) * 300 - 50 + 'px';
+        
+        particle.style.setProperty('--dx', dx);
+        particle.style.setProperty('--dy', dy);
+        particle.style.left = rect.left + rect.width / 2 + 'px';
+        particle.style.top = rect.top + rect.height / 3 + 'px';
+        
+        // Random particle colors
+        const colors = ['#fbbf24', '#f43f5e', '#38bdf8', '#4ade80'];
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        document.body.appendChild(particle);
+
+        setTimeout(() => particle.remove(), 800);
+      }
+    }
+  </script>
+</body>
+</html>
