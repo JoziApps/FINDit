@@ -52,6 +52,523 @@
     }
 
     body {
+      background-color: #0f172a; /* Default backdrop prior to unlock */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: hidden;
+    }
+
+    body.unlocked {
+      background-image: var(--bg-overlay), var(--bg-image);
+    }
+
+    /* Content Visibility Locking */
+    .main-content {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      flex-grow: 1;
+    }
+
+    body.unlocked .main-content {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* =========================================================
+       AGE GATE & MODAL OVERLAYS
+       ========================================================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 35px 30px 30px 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    /* Top Right Close Button */
+    .modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      background-color: var(--close-btn-bg);
+      color: var(--close-btn-color);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: bold;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      z-index: 10;
+    }
+
+    .modal-close-btn:hover {
+      background-color: var(--accent);
+      color: #ffffff;
+      transform: scale(1.1) rotate(90deg);
+    }
+
+    /* Standard Buttons */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 8px;
+      transition: transform 0.2s, filter 0.2s;
+    }
+
+    .btn-sfw { background-color: #3b82f6; color: #fff; }
+    .btn-nsfw { background-color: #e11d48; color: #fff; }
+    .btn-accent { background-color: var(--accent); color: #fff; }
+    .btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+    /* Sender Toolbar */
+    .sender-bar {
+      width: 100%;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 500;
+    }
+
+    /* =========================================================
+       GIFT BOXES & PULSING ANIMATION
+       ========================================================= */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 40px 20px;
+      text-align: center;
+      margin: auto 0;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      opacity: 0.8;
+    }
+
+    .boxes-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .gift-box-wrapper {
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    .gift-box-wrapper:nth-child(1) { animation-delay: 0s; }
+    .gift-box-wrapper:nth-child(2) { animation-delay: 1s; }
+    .gift-box-wrapper:nth-child(3) { animation-delay: 2s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .gift-box {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+    .box-1 { background-color: var(--box-1); }
+    .box-2 { background-color: var(--box-2); }
+    .box-3 { background-color: var(--box-3); }
+
+    .gift-lid {
+      width: 200px;
+      height: 40px;
+      position: absolute;
+      top: -15px;
+      left: -10px;
+      background-color: inherit;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      filter: brightness(1.15);
+    }
+
+    /* Ribbons */
+    .gift-box::before {
+      content: ''; position: absolute; left: 50%; top: 0; width: 30px; height: 100%;
+      background: #fbbf24; transform: translateX(-50%);
+    }
+    .gift-box::after {
+      content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 30px;
+      background: #fbbf24; transform: translateY(-50%);
+    }
+
+    .popup-card-img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+    footer {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    footer a, footer button {
+      color: var(--text-color);
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: bold;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    footer a:hover, footer button:hover {
+      text-decoration: underline;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       1. AGE GATE GATEWAY MODAL (Always Blocks Page First)
+       ========================================================= -->
+  <div class="modal-overlay active" id="ageGateModal">
+    <div class="modal-card">
+      <h2>Welcome! 🎁</h2>
+      <p style="margin: 15px 0;">Please verify your age to gain access to your birthday surprise:</p>
+      <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-sfw" onclick="selectAge(false)">Under 18 (SFW Mode)</button>
+        <button class="btn btn-nsfw" onclick="selectAge(true)">18+ (NSFW Mode)</button>
+      </div>
+      <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.7;">
+        By continuing you accept our <a href="#" style="color: inherit;" onclick="alert('Terms of Use: Enjoy your custom gifts responsibly!');">Terms of Use</a>.
+      </p>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MAIN UNLOCKED CONTENT WRAPPER
+       ========================================================= -->
+  <div class="main-content" id="mainContent">
+
+    <!-- Sender Bar -->
+    <div class="sender-bar hidden" id="senderBar">
+      <span>✏️ <strong>Sender Mode Active</strong></span>
+      <div>
+        <button class="btn btn-accent" onclick="openLaunchCardEditor()">Edit Launch Card</button>
+        <button class="btn btn-sfw" onclick="toggleSenderMode(false)">Preview Receiver View</button>
+      </div>
+    </div>
+
+    <!-- Main Surprise Section -->
+    <div class="container">
+      <h1 id="pageTitle">🎉 Pick Your Gift! 🎂</h1>
+      <p class="subtitle">Choose any of the 3 pulsing boxes below to reveal your gift.</p>
+
+      <div class="boxes-wrapper">
+        <div class="gift-box-wrapper" onclick="revealGift(0)">
+          <div class="gift-box box-1">
+            <div class="gift-lid"></div>
+          </div>
+          <h3 style="margin-top: 15px;">Option #1</h3>
+        </div>
+
+        <div class="gift-box-wrapper" onclick="revealGift(1)">
+          <div class="gift-box box-2">
+            <div class="gift-lid"></div>
+          </div>
+          <h3 style="margin-top: 15px;">Option #2</h3>
+        </div>
+
+        <div class="gift-box-wrapper" onclick="revealGift(2)">
+          <div class="gift-box box-3">
+            <div class="gift-lid"></div>
+          </div>
+          <h3 style="margin-top: 15px;">Option #3</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Links -->
+    <footer>
+      <a href="https://tag-it-sigma.vercel.app" target="_blank" rel="noopener">Tag-It Sigma</a> |
+      <button onclick="document.getElementById('faqModal').classList.add('active')">FAQ</button> |
+      <button onclick="toggleSenderMode(true)">Customize & Share Page</button>
+    </footer>
+
+  </div>
+
+  <!-- =========================================================
+       REVEAL & EDITABLE LAUNCH CARD MODALS
+       ========================================================= -->
+  <!-- Dynamic Gift/Launch Modal -->
+  <div class="modal-overlay" id="interactiveModal" onclick="handleOutsideClick(event)">
+    <div class="modal-card" id="modalCardContent">
+      <button class="modal-close-btn" onclick="closeModal()" title="Close">&times;</button>
+      
+      <h2 id="cardTitle">Welcome Card</h2>
+      <img id="cardImage" src="joburg.png" class="popup-card-img" alt="Card Image">
+      <p id="cardDescription">Hope you enjoy your special birthday surprise page!</p>
+      
+      <!-- Receiver Action Buttons -->
+      <div id="receiverControls" style="margin-top: 20px;">
+        <button class="btn btn-sfw" onclick="closeModal()">Awesome!</button>
+        <button class="btn btn-accent" onclick="sharePage()">Share</button>
+        <button class="btn" style="background:#64748b; color:#fff;" onclick="downloadSummary()">Save Info</button>
+      </div>
+
+      <!-- Sender Edit Fields -->
+      <div id="senderEditorFields" class="hidden" style="margin-top: 15px; text-align: left;">
+        <hr style="margin: 15px 0;">
+        <label>Card Title:</label>
+        <input type="text" id="editTitleInput" style="width:100%; padding:8px; margin-bottom:10px;">
+        <label>Image URL:</label>
+        <input type="text" id="editImgInput" style="width:100%; padding:8px; margin-bottom:10px;">
+        <label>Caption / Text:</label>
+        <textarea id="editDescInput" style="width:100%; padding:8px; margin-bottom:10px;"></textarea>
+        <button class="btn btn-accent" onclick="saveLaunchCardChanges()">Save Card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Modal -->
+  <div class="modal-overlay" id="faqModal" onclick="if(event.target === this) this.classList.remove('active')">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="document.getElementById('faqModal').classList.remove('active')" title="Close">&times;</button>
+      <h2>Frequently Asked Questions</h2>
+      <div style="text-align: left; margin: 20px 0; font-size: 0.95rem; line-height: 1.5;">
+        <p><strong>Q: How do I pick a gift?</strong><br>A: Tap on any of the 3 animated boxes to open it.</p><br>
+        <p><strong>Q: Can I edit the gifts?</strong><br>A: Receivers can view and save their gifts. Senders can edit contents using Sender Mode.</p>
+      </div>
+      <button class="btn btn-sfw" onclick="document.getElementById('faqModal').classList.remove('active')">Close</button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       JAVASCRIPT LOGIC
+       ========================================================= -->
+  <script>
+    let isNSFW = false;
+    let isSender = false;
+
+    let launchCard = {
+      title: "Happy Birthday! 🎉",
+      image: "joburg.png",
+      description: "Welcome to your interactive birthday surprise. Click any box to reveal your gift!"
+    };
+
+    const giftList = [
+      {
+        title: "Exclusive Voucher #1",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80",
+        description: "Special custom experience voucher handpicked just for you!"
+      },
+      {
+        title: "Luxury Getaway #2",
+        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80",
+        description: "A relax & wellness trip package."
+      },
+      {
+        title: "Mystery Gift #3",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+        description: "An unforgettable dinner date night."
+      }
+    ];
+
+    function selectAge(over18) {
+      isNSFW = over18;
+      
+      // Dismiss Age Gate
+      document.getElementById('ageGateModal').classList.remove('active');
+
+      // Unlock body & apply relevant theme
+      document.body.classList.add('unlocked');
+      if (isNSFW) {
+        document.body.classList.add('nsfw-mode');
+        document.getElementById('pageTitle').innerText = '🔥 Pick Your Midnight Gift 💋';
+      } else {
+        document.body.classList.add('sfw-mode');
+      }
+
+      // Display the launch pop-up card upon entering
+      showCard(launchCard.title, launchCard.image, launchCard.description, false);
+    }
+
+    function showCard(title, img, desc, isGiftReveal) {
+      document.getElementById('cardTitle').innerText = title;
+      document.getElementById('cardImage').src = img;
+      document.getElementById('cardDescription').innerText = desc;
+      
+      document.getElementById('senderEditorFields').classList.add('hidden');
+      document.getElementById('receiverControls').classList.remove('hidden');
+
+      document.getElementById('interactiveModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('interactiveModal').classList.remove('active');
+    }
+
+    function handleOutsideClick(event) {
+      if (event.target.id === 'interactiveModal') {
+        closeModal();
+      }
+    }
+
+    function revealGift(index) {
+      const gift = giftList[index];
+      showCard(gift.title, gift.image, gift.description, true);
+    }
+
+    function toggleSenderMode(enable) {
+      isSender = enable;
+      const bar = document.getElementById('senderBar');
+      if (enable) {
+        bar.classList.remove('hidden');
+        alert("Sender Mode Enabled: You can now edit the pop-up card and page contents.");
+      } else {
+        bar.classList.add('hidden');
+      }
+    }
+
+    function openLaunchCardEditor() {
+      document.getElementById('cardTitle').innerText = "Edit Launch Pop-Up Card";
+      document.getElementById('editTitleInput').value = launchCard.title;
+      document.getElementById('editImgInput').value = launchCard.image;
+      document.getElementById('editDescInput').value = launchCard.description;
+
+      document.getElementById('receiverControls').classList.add('hidden');
+      document.getElementById('senderEditorFields').classList.remove('hidden');
+      document.getElementById('interactiveModal').classList.add('active');
+    }
+
+    function saveLaunchCardChanges() {
+      launchCard.title = document.getElementById('editTitleInput').value;
+      launchCard.image = document.getElementById('editImgInput').value;
+      launchCard.description = document.getElementById('editDescInput').value;
+      
+      closeModal();
+      alert("Launch card updated successfully!");
+    }
+
+    function sharePage() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Birthday Gift Reveal',
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      }
+    }
+
+    function downloadSummary() {
+      const text = `Gift Summary:\nTitle: ${document.getElementById('cardTitle').innerText}\nDetails: ${document.getElementById('cardDescription').innerText}`;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'gift-details.txt';
+      a.click();
+    }
+  </script>
+</body>
+</html>      --card-bg: rgba(30, 41, 59, 0.95);
+      --box-1: #9f1239;
+      --box-2: #881337;
+      --box-3: #4c1d95;
+      --accent: #f43f5e;
+      --close-btn-bg: rgba(255, 255, 255, 0.15);
+      --close-btn-color: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+      transition: background-color 0.4s ease, color 0.4s ease, font-family 0.4s ease;
+    }
+
+    body {
       background-image: var(--bg-overlay), var(--bg-image);
       background-size: cover;
       background-position: center;
