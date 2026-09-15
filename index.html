@@ -1,70 +1,1161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Jozi Finder Finder &mdash; the adult retail directory</title>
-<meta name="description" content="A directory of South African sex toy, lingerie and fetish retailers." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#120b12" />
+  <meta name="description" content="FINDit — South Africa's free adult retail & services directory. Registered stores, events & sellers. No sign-up." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FINDit" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>FINDit — Find Adult Pleasure, Locally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #120b12;
+      --ink-raised: #1c121c;
+      --card: #251a25;
+      --card-border: #3a2a35;
+      --watermelon: #FC6C85;
+      --watermelon-deep: #E04B6A;
+      --watermelon-soft: #FF9AAD;
+      --rind: #2E8B57;
+      --rind-soft: #4CAF70;
+      --cream: #FDF6F8;
+      --muted: #C4A8B0;
+      --radius: 14px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: "Inter", system-ui, sans-serif;
+      line-height: 1.55;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ---------- AGE GATE ---------- */
+    #age-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(18,11,18,0.96);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+    #age-gate.hidden { display: none; }
+    .age-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .age-card h2 {
+      font-family: "Fraunces", serif;
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+    }
+    .age-card p { color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
+    .age-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: var(--watermelon);
+      color: #1a0a0f;
+      box-shadow: 0 4px 20px rgba(252,108,133,0.35);
+    }
+    .btn-primary:hover { background: var(--watermelon-deep); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--card-border);
+    }
+    .btn-ghost:hover { border-color: var(--watermelon-soft); color: var(--cream); }
+
+    /* ---------- HEADER ---------- */
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(18,11,18,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 0;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .masthead-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo {
+      font-family: "Fraunces", serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .logo span {
+      background: linear-gradient(135deg, var(--watermelon), var(--watermelon-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .nav {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .nav button {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav button:hover { color: var(--cream); }
+    .nav button.active {
+      background: var(--watermelon);
+      color: #1a0a0f;
+      font-weight: 600;
+    }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    /* ---------- PAGES ---------- */
+    .page { display: none; padding: 28px 0 80px; min-height: 70vh; }
+    .page.active { display: block; animation: fadeIn 0.35s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* Hero / Find It intro */
+    .hero {
+      text-align: center;
+      padding: 20px 0 32px;
+    }
+    .hero h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--watermelon), var(--watermelon-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 24px;
+      font-size: 1.05rem;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--ink-raised);
+      border: 1px solid var(--card-border);
+      color: var(--cream);
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 14px 16px 14px 44px;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: var(--watermelon); }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip:hover { border-color: var(--watermelon-soft); color: var(--cream); }
+    .chip.active {
+      background: var(--watermelon);
+      border-color: var(--watermelon);
+      color: #1a0a0f;
+      font-weight: 600;
+    }
+    .result-count {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--watermelon);
+      box-shadow: 0 12px 40px rgba(252,108,133,0.15);
+    }
+    .card-img {
+      aspect-ratio: 4/3;
+      background: var(--ink-raised);
+      object-fit: cover;
+      width: 100%;
+      display: block;
+    }
+    .card-body {
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(252,108,133,0.15);
+      color: var(--watermelon-soft);
+      white-space: nowrap;
+    }
+    .city {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .blurb {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-footer {
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stars {
+      color: var(--watermelon);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 0.85rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    .modal-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+    }
+    .modal-body { padding: 24px; }
+    .modal-body h2 {
+      font-family: "Fraunces", serif;
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+    .modal-meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .modal-contacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .modal-contacts a {
+      color: var(--watermelon);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .modal-contacts a:hover { text-decoration: underline; }
+    .reviews-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--cream);
+    }
+    .review {
+      background: var(--ink-raised);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .review-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .review-source {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .review-text {
+      font-size: 0.9rem;
+      color: var(--cream);
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-header-rel { position: relative; }
+
+    /* About & Contact pages */
+    .content-block {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .content-block h1 {
+      font-family: "Fraunces", serif;
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+    }
+    .content-block h2 {
+      font-family: "Fraunces", serif;
+      font-size: 1.35rem;
+      margin: 32px 0 12px;
+      color: var(--watermelon-soft);
+    }
+    .content-block p, .content-block li {
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+    .content-block ul { padding-left: 1.3rem; margin-bottom: 16px; }
+    .disclaimer {
+      background: var(--ink-raised);
+      border-left: 4px solid var(--watermelon);
+      padding: 16px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 24px 0;
+      font-size: 0.92rem;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 0;
+    }
+    .faq-item summary {
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: "+"; color: var(--watermelon); font-size: 1.2rem; }
+    .faq-item[open] summary::after { content: "−"; }
+    .faq-item p { margin-top: 10px; margin-bottom: 0; }
+
+    /* Contact form */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--cream);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--ink-raised);
+      border: 1px solid var(--card-border);
+      color: var(--cream);
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 12px 14px;
+      border-radius: 10px;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--watermelon);
+    }
+    .form-group textarea { min-height: 120px; resize: vertical; }
+    .form-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--card-border);
+      padding: 28px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .site-footer a {
+      color: var(--watermelon-soft);
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    /* Install prompt banner */
+    #install-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      background: var(--card);
+      border: 1px solid var(--watermelon);
+      border-radius: 999px;
+      padding: 10px 12px 10px 18px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(252,108,133,0.25);
+      max-width: calc(100% - 32px);
+    }
+    #install-banner.show { display: flex; }
+    #install-banner p {
+      font-size: 0.9rem;
+      color: var(--cream);
+      margin: 0;
+      white-space: nowrap;
+    }
+    #install-banner .btn { padding: 8px 16px; font-size: 0.85rem; }
+    #install-banner .dismiss {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .nav { display: none; }
+      .nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--ink);
+        border-bottom: 1px solid var(--card-border);
+        padding: 12px;
+        gap: 4px;
+      }
+      .menu-toggle { display: block; }
+      .masthead-inner { position: relative; }
+      .grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.85rem; }
+    }
+  </style>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="wrap masthead-inner">
-    <span class="wordmark">Jozi Finder Finder  <em>SA</em></span>
-    <span class="tagline">A directory of South Africa's adult retailers</span>
-  </div>
-</header>
-
-<main class="wrap">
-
-  <section class="intro">
-    <h1 class="reveal">Find where South Africans shop for pleasure.</h1>
-    <p class="subline" id="subline">Discreet. Registered. Local.</p>
-    <p class="stats-strip" id="stats-strip"></p>
-  </section>
-
-  <section class="featured" id="featured-section" aria-label="Jozi Nites recommended">
-    <h2 class="featured-heading">Jozi Nites recommended</h2>
-    <div class="featured-row" id="featured-row"></div>
-  </section>
-
-  <section class="controls" aria-label="Filter listings">
-    <input
-      type="text"
-      id="search"
-      class="search-input"
-      placeholder="Search by name or description&hellip;"
-      aria-label="Search listings"
-    />
-    <div class="chip-row" id="category-chips" role="group" aria-label="Filter by category"></div>
-    <div class="chip-row chip-row-city" id="city-chips" role="group" aria-label="Filter by city"></div>
-  </section>
-
-  <p class="result-count" id="result-count" aria-live="polite"></p>
-
-  <section class="grid" id="listing-grid" aria-live="polite"></section>
-
-  <p class="empty-state" id="empty-state" hidden>No listings match that search. Try a different term or category.</p>
-
-</main>
-
-<footer class="site-footer">
-  <div class="wrap footer-inner">
-    <p>This directory lists registered businesses only. No private individuals or personal social accounts are included.</p>
-    <div class="footer-links">
-      <a href="mailto:hello@jozinites.co.za?subject=Suggest%20a%20store">Suggest a store</a>
-      <span class="footer-divider" aria-hidden="true">&middot;</span>
-      <a href="#">More from Jozi Nites</a>
+  <!-- AGE GATE -->
+  <div id="age-gate">
+    <div class="age-card">
+      <h2>18+ Only</h2>
+      <p>FINDit lists adult retail, services and events. By entering you confirm you are 18 years or older and of legal age in your location.</p>
+      <div class="age-btns">
+        <button class="btn btn-primary" id="age-yes">I am 18 or older</button>
+        <button class="btn btn-ghost" id="age-no">Exit</button>
+      </div>
     </div>
-    <p class="signature">Built by <strong>Jozi Nites</strong> &middot; Johannesburg, South Africa</p>
   </div>
-</footer>
 
-<script src="data.js"></script>
-<script src="script.js"></script>
+  <!-- HEADER -->
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a href="#" class="logo" data-page="find">FIND<span>it</span></a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+      <nav class="nav" id="main-nav">
+        <button data-page="about">About Us</button>
+        <button data-page="find" class="active">Find It</button>
+        <button data-page="contact">Contact Us</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ========== FIND IT ========== -->
+    <section id="page-find" class="page active">
+      <div class="hero">
+        <h1>Find it. <em>Feel it.</em></h1>
+        <p>Registered adult retailers, shops, events &amp; sellers across South Africa. Free. No sign-up. Discreet.</p>
+      </div>
+
+      <div class="controls">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="search" id="search" class="search-input" placeholder="Search by name, city or keyword…" aria-label="Search listings" />
+        </div>
+        <div class="chip-row" id="category-chips">
+          <button class="chip active" data-cat="All">All</button>
+          <button class="chip" data-cat="Retail">Retail</button>
+          <button class="chip" data-cat="Shops">Shops</button>
+          <button class="chip" data-cat="Events">Events</button>
+          <button class="chip" data-cat="Sellers">Sellers</button>
+        </div>
+      </div>
+
+      <p class="result-count" id="result-count">Showing 0 listings</p>
+      <div class="grid" id="listing-grid"></div>
+      <div class="empty-state" id="empty-state" hidden>No listings match. Try a different search or category.</div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="page-about" class="page">
+      <div class="content-block">
+        <h1>About FINDit</h1>
+        <p>FINDit is a free, public web directory of adult retail stores, shops, events and sellers (new &amp; second-hand) across South Africa. Built by <strong>Jozi Nites</strong> as part of our wellness and education initiative.</p>
+
+        <div class="disclaimer">
+          <strong>Disclaimer:</strong> FINDit is a listing service only. We have no affiliation with any of the businesses or individuals listed. We do not endorse, verify quality of products/services, or take responsibility for any transactions that take place between users and listed parties. Always exercise caution and follow local laws.
+        </div>
+
+        <h2>What we list</h2>
+        <ul>
+          <li><strong>Retail</strong> — Online and physical adult stores</li>
+          <li><strong>Shops</strong> — Boutiques, lingerie, fetish &amp; lifestyle stores</li>
+          <li><strong>Events</strong> — Parties, workshops, expos, community gatherings</li>
+          <li><strong>Sellers</strong> — New &amp; second-hand individual sellers (registered / public only)</li>
+        </ul>
+
+        <h2>Terms &amp; Privacy (POPIA)</h2>
+        <p>We respect the Protection of Personal Information Act (POPIA). We collect only what is necessary for the directory and contact form. We do not sell personal data. Contact form submissions are used solely to respond to your enquiry, report, or listing request.</p>
+        <p>Discretion is core to FINDit. We do not publish private individuals’ personal social accounts without clear public business intent.</p>
+        <p>For full privacy details or data requests, use the Contact form and select “Update / Privacy request”.</p>
+
+        <h2>FAQ</h2>
+        <details class="faq-item">
+          <summary>Is FINDit free?</summary>
+          <p>Yes. Completely free for users. No sign-up or registration required to browse.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I get listed?</summary>
+          <p>Go to Contact Us → choose “List me / Update listing” and send your details. We review for public business status before adding.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do you verify every listing?</summary>
+          <p>We list registered / publicly operating businesses and events. We do not guarantee product quality or individual seller authenticity. Always do your own checks.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I report a listing?</summary>
+          <p>Yes. Use Contact Us → “Report a listing” and give as much detail as possible.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is this affiliated with the stores?</summary>
+          <p>No. FINDit is an independent directory. No commercial affiliation with listed parties.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="page-contact" class="page">
+      <div class="content-block">
+        <h1>Contact Us</h1>
+        <p>Questions, updates, reports or listing requests — drop us a message. We aim to respond within a few business days.</p>
+
+        <!-- 
+          FREE FORM ENDPOINT SETUP (choose one):
+          1. FormSubmit (zero signup): change action to https://formsubmit.co/YOUR@EMAIL.com
+          2. Formspree: sign up at formspree.io → create form → paste endpoint below
+          3. Web3Forms: get access key from web3forms.com
+        -->
+        <form id="contact-form" action="https://formsubmit.co/YOUR_EMAIL@example.com" method="POST">
+          <input type="hidden" name="_subject" value="FINDit Contact Form" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value="https://YOUR-GITHUB-PAGES-URL/?sent=1" />
+          <div class="form-group">
+            <label for="c-type">What is this about?</label>
+            <select id="c-type" name="type" required>
+              <option value="">Select…</option>
+              <option value="more-info">More info about a listing</option>
+              <option value="comments">General comments</option>
+              <option value="report">Report a listing</option>
+              <option value="update">Update existing listing</option>
+              <option value="list-me">List me / New listing</option>
+              <option value="privacy">Privacy / POPIA request</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="c-name">Your name (optional)</label>
+            <input type="text" id="c-name" name="name" placeholder="How should we address you?" />
+          </div>
+          <div class="form-group">
+            <label for="c-email">Email</label>
+            <input type="email" id="c-email" name="email" required placeholder="so we can reply" />
+          </div>
+          <div class="form-group">
+            <label for="c-msg">Message</label>
+            <textarea id="c-msg" name="message" required placeholder="Details, links, city, category…"></textarea>
+          </div>
+          <p class="form-note">By submitting you agree we may use this information solely to respond to your request (POPIA). We do not share it.</p>
+          <button type="submit" class="btn btn-primary" style="margin-top:12px">Send message</button>
+        </form>
+
+        <h2 style="margin-top:40px">Other Jozi Nites links</h2>
+        <div class="footer-links" style="justify-content:flex-start">
+          <a href="https://joziapps.github.io/" target="_blank" rel="noopener">Jozi Nites Hub</a>
+          <a href="https://tag-it-sigma.vercel.app" target="_blank" rel="noopener">TAGit Watermark Studio</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-links">
+        <a href="#" data-page="about">About</a>
+        <a href="#" data-page="find">Find It</a>
+        <a href="#" data-page="contact">Contact</a>
+      </div>
+      <p>FINDit lists public businesses only. No private individuals. Built by <a href="#" data-page="about">Jozi Nites</a> · Johannesburg, South Africa</p>
+      <p style="margin-top:8px;opacity:0.7">18+ · Discretion · POPIA-aware</p>
+    </div>
+  </footer>
+
+  <!-- INSTALL BANNER (PWA) -->
+  <div id="install-banner" role="status">
+    <p>Install FINDit on your home screen</p>
+    <button class="btn btn-primary" id="install-btn">Install</button>
+    <button class="dismiss" id="install-dismiss" aria-label="Dismiss">×</button>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header-rel">
+        <img class="modal-img" id="modal-img" src="" alt="" />
+        <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <h2 id="modal-name"></h2>
+        <p class="modal-meta" id="modal-meta"></p>
+        <div class="modal-contacts" id="modal-contacts"></div>
+        <div class="reviews-title">Reviews &amp; Ratings</div>
+        <div id="modal-reviews"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- SAMPLE DATA ----------
+    const LISTINGS = [
+      {
+        id: 1,
+        name: "4Play Essentials",
+        category: "Retail",
+        city: "Nationwide (online)",
+        contacts: { web: "https://www.4playessentials.co.za/", whatsapp: "" },
+        blurb: "Male & female sex toys, vibrators, anal toys and BDSM restraints. Free delivery over R749.",
+        img: "https://images.unsplash.com/photo-1615529182904-14819c35db37?w=600&h=450&fit=crop",
+        rating: 5,
+        reviews: [
+          { source: "FINDit", stars: 5, text: "Reliable nationwide delivery and clear product info." },
+          { source: "Google", stars: 5, text: "Great selection and discreet packaging." },
+          { source: "Facebook", stars: 4, text: "Fast shipping, good quality toys." },
+          { source: "Instagram", stars: 5, text: "Love the body-safe focus." },
+          { source: "Trustpilot", stars: 4, text: "Solid store, will order again." }
+        ]
+      },
+      {
+        id: 2,
+        name: "Désir Adult Shop",
+        category: "Shops",
+        city: "Camps Bay, Cape Town",
+        contacts: { web: "https://www.desir.co.za/", phone: "" },
+        blurb: "Luxury designer sex toy brands with an appointment-only showroom in Camps Bay.",
+        img: "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=600&h=450&fit=crop",
+        rating: 5,
+        reviews: [
+          { source: "FINDit", stars: 5, text: "Premium experience, appointment system keeps it exclusive." },
+          { source: "Google", stars: 5, text: "Beautiful showroom and expert advice." },
+          { source: "TripAdvisor", stars: 4, text: "High-end selection worth the visit." },
+          { source: "Facebook", stars: 5, text: "Discreet and professional." },
+          { source: "Instagram", stars: 5, text: "Stunning brands." }
+        ]
+      },
+      {
+        id: 3,
+        name: "Little Secret Adult Store",
+        category: "Retail",
+        city: "Nationwide (online)",
+        contacts: { web: "https://www.little-secret.co.za/" },
+        blurb: "Vibrators, dildos and anal toys with discreet packaging and nationwide shipping.",
+        img: "https://images.unsplash.com/photo-1583241800698-9c2e0c2c0c0c?w=600&h=450&fit=crop",
+        rating: 4,
+        reviews: [
+          { source: "FINDit", stars: 4, text: "Good range and solid packaging." },
+          { source: "Google", stars: 4, text: "Arrived well packaged." },
+          { source: "Facebook", stars: 3, text: "Average selection but reliable." },
+          { source: "Instagram", stars: 4, text: "Nice everyday options." },
+          { source: "HelloPeter", stars: 4, text: "Would recommend." }
+        ]
+      },
+      {
+        id: 4,
+        name: "Allure Sensuality Emporium",
+        category: "Shops",
+        city: "Milnerton, Cape Town",
+        contacts: { web: "https://www.alluresensuality.co.za/" },
+        blurb: "Over 500 body-safe pleasure products, plus in-person toy parties and workshops.",
+        img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=450&fit=crop",
+        rating: 5,
+        reviews: [
+          { source: "FINDit", stars: 5, text: "Community-focused with workshops — standout." },
+          { source: "Google", stars: 5, text: "Friendly staff and great product knowledge." },
+          { source: "Facebook", stars: 5, text: "Love the parties." },
+          { source: "Instagram", stars: 4, text: "Beautiful store." },
+          { source: "Local guide", stars: 5, text: "Best in the area." }
+        ]
+      },
+      {
+        id: 5,
+        name: "Lizzy Bliss",
+        category: "Shops",
+        city: "Waterkloof, Pretoria",
+        contacts: { web: "https://www.lizzybliss.co.za/" },
+        blurb: "Boutique adult wellness store with in-person expert advice and online ordering.",
+        img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=450&fit=crop",
+        rating: 4,
+        reviews: [
+          { source: "FINDit", stars: 4, text: "Boutique feel with genuine advice." },
+          { source: "Google", stars: 4, text: "Helpful and non-judgemental." },
+          { source: "Facebook", stars: 5, text: "Great Pretoria option." },
+          { source: "Instagram", stars: 4, text: "Nice selection." },
+          { source: "HelloPeter", stars: 3, text: "Decent." }
+        ]
+      },
+      {
+        id: 6,
+        name: "Ohgee",
+        category: "Retail",
+        city: "Riebeek-Kasteel, Western Cape",
+        contacts: { web: "#" },
+        blurb: "Toys, lingerie and a wide fetish & BDSM range. Free delivery over R900.",
+        img: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=450&fit=crop",
+        rating: 4,
+        reviews: [
+          { source: "FINDit", stars: 4, text: "Strong fetish focus for the region." },
+          { source: "Google", stars: 4, text: "Good range." },
+          { source: "Facebook", stars: 4, text: "Discreet delivery." },
+          { source: "Instagram", stars: 3, text: "Okay." },
+          { source: "Local", stars: 4, text: "Worth checking." }
+        ]
+      },
+      {
+        id: 7,
+        name: "Jozi After Dark Expo",
+        category: "Events",
+        city: "Johannesburg",
+        contacts: { web: "#" },
+        blurb: "Annual adult lifestyle expo featuring retailers, workshops and community stalls.",
+        img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&h=450&fit=crop",
+        rating: 5,
+        reviews: [
+          { source: "FINDit", stars: 5, text: "Biggest adult community event in Gauteng." },
+          { source: "Facebook", stars: 5, text: "Always a good vibe." },
+          { source: "Instagram", stars: 4, text: "Great for networking." },
+          { source: "Eventbrite", stars: 5, text: "Well organised." },
+          { source: "Attendee", stars: 5, text: "Worth it every year." }
+        ]
+      },
+      {
+        id: 8,
+        name: "Second Skin Closet",
+        category: "Sellers",
+        city: "Cape Town (online)",
+        contacts: { web: "#" },
+        blurb: "Pre-loved lingerie and fetish wear. Verified seller, free shipping on orders over R600.",
+        img: "https://images.unsplash.com/photo-1558171813-4c0880ca7285?w=600&h=450&fit=crop",
+        rating: 4,
+        reviews: [
+          { source: "FINDit", stars: 4, text: "Good condition second-hand options." },
+          { source: "Facebook", stars: 4, text: "Honest descriptions." },
+          { source: "Instagram", stars: 5, text: "Cute pieces." },
+          { source: "Gumtree", stars: 3, text: "Mixed but mostly fine." },
+          { source: "Buyer", stars: 4, text: "Would buy again." }
+        ]
+      }
+    ];
+
+    // ---------- STATE ----------
+    let activeCategory = "All";
+    let activePage = "find";
+
+    // ---------- AGE GATE ----------
+    const ageGate = document.getElementById("age-gate");
+    if (localStorage.getItem("findit_age_ok") === "1") {
+      ageGate.classList.add("hidden");
+    }
+    document.getElementById("age-yes").addEventListener("click", () => {
+      localStorage.setItem("findit_age_ok", "1");
+      ageGate.classList.add("hidden");
+    });
+    document.getElementById("age-no").addEventListener("click", () => {
+      window.location.href = "https://www.google.com";
+    });
+
+    // ---------- NAV ----------
+    function showPage(page) {
+      activePage = page;
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById("page-" + page).classList.add("active");
+      document.querySelectorAll(".nav button").forEach(b => {
+        b.classList.toggle("active", b.dataset.page === page);
+      });
+      document.getElementById("main-nav").classList.remove("open");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    document.querySelectorAll("[data-page]").forEach(el => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        showPage(el.dataset.page);
+      });
+    });
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+      document.getElementById("main-nav").classList.toggle("open");
+    });
+
+    // ---------- SEARCH & FILTER ----------
+    const searchInput = document.getElementById("search");
+    const grid = document.getElementById("listing-grid");
+    const resultCount = document.getElementById("result-count");
+    const emptyState = document.getElementById("empty-state");
+
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeCategory = chip.dataset.cat;
+        renderGrid();
+      });
+    });
+    searchInput.addEventListener("input", renderGrid);
+
+    function stars(n) {
+      return "★".repeat(n) + "☆".repeat(5 - n);
+    }
+
+    function renderGrid() {
+      const q = searchInput.value.trim().toLowerCase();
+      const filtered = LISTINGS.filter(item => {
+        const catOk = activeCategory === "All" || item.category === activeCategory;
+        const searchOk = !q || 
+          item.name.toLowerCase().includes(q) ||
+          item.city.toLowerCase().includes(q) ||
+          item.blurb.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q);
+        return catOk && searchOk;
+      });
+
+      grid.innerHTML = "";
+      resultCount.textContent = `Showing ${filtered.length} listing${filtered.length !== 1 ? "s" : ""}`;
+      emptyState.hidden = filtered.length > 0;
+
+      filtered.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.src='https://placehold.co/600x450/251a25/FC6C85?text=FINDit'" />
+          <div class="card-body">
+            <div class="card-top">
+              <h3>${item.name}</h3>
+              <span class="tag">${item.category}</span>
+            </div>
+            <p class="city">${item.city}</p>
+            <p class="blurb">${item.blurb}</p>
+            <div class="card-footer">
+              <span class="stars" title="${item.rating}/5">${stars(item.rating)}</span>
+              <button class="btn btn-primary btn-sm" data-id="${item.id}">More Info</button>
+            </div>
+          </div>
+        `;
+        card.querySelector("button").addEventListener("click", (e) => {
+          e.stopPropagation();
+          openModal(item);
+        });
+        card.addEventListener("click", () => openModal(item));
+        grid.appendChild(card);
+      });
+    }
+
+    // ---------- MODAL ----------
+    const modal = document.getElementById("modal");
+    function openModal(item) {
+      document.getElementById("modal-img").src = item.img;
+      document.getElementById("modal-img").alt = item.name;
+      document.getElementById("modal-name").textContent = item.name;
+      document.getElementById("modal-meta").textContent = `${item.category} · ${item.city} · ${stars(item.rating)} (${item.rating}/5)`;
+      
+      const contacts = document.getElementById("modal-contacts");
+      contacts.innerHTML = "";
+      if (item.contacts.web && item.contacts.web !== "#") {
+        contacts.innerHTML += `<a href="${item.contacts.web}" target="_blank" rel="noopener">Visit website →</a>`;
+      }
+      if (item.contacts.whatsapp) {
+        contacts.innerHTML += `<a href="https://wa.me/${item.contacts.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>`;
+      }
+      if (item.contacts.phone) {
+        contacts.innerHTML += `<a href="tel:${item.contacts.phone}">Call</a>`;
+      }
+
+      const reviewsEl = document.getElementById("modal-reviews");
+      reviewsEl.innerHTML = item.reviews.map(r => `
+        <div class="review">
+          <div class="review-head">
+            <span class="stars">${stars(r.stars)}</span>
+            <span class="review-source">${r.source}</span>
+          </div>
+          <p class="review-text">${r.text}</p>
+        </div>
+      `).join("");
+
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal() {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+    // ---------- CONTACT ----------
+    // Form uses native POST to FormSubmit / Formspree.
+    // Optional: show success if redirected back with ?sent=1
+    if (new URLSearchParams(location.search).get("sent") === "1") {
+      setTimeout(() => alert("Thanks! Your message was sent. We will get back to you soon."), 400);
+      history.replaceState({}, "", location.pathname);
+    }
+
+    // ---------- PWA INSTALL ----------
+    let deferredPrompt = null;
+    const installBanner = document.getElementById("install-banner");
+    const installBtn = document.getElementById("install-btn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show after a short delay so user has seen the app
+      setTimeout(() => {
+        if (deferredPrompt && !localStorage.getItem("findit_install_dismissed")) {
+          installBanner.classList.add("show");
+        }
+      }, 8000);
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBanner.classList.remove("show");
+    });
+
+    document.getElementById("install-dismiss").addEventListener("click", () => {
+      installBanner.classList.remove("show");
+      localStorage.setItem("findit_install_dismissed", "1");
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installBanner.classList.remove("show");
+      deferredPrompt = null;
+    });
+
+    // Register Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch((err) => {
+          console.log("SW registration failed:", err);
+        });
+      });
+    }
+
+    // Init
+    renderGrid();
+  </script>
 </body>
 </html>
