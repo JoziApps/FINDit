@@ -63,19 +63,38 @@
       background: var(--card);
       border: 1px solid var(--card-border);
       border-radius: 20px;
-      padding: 36px 28px;
+      padding: 40px 28px 36px;
       max-width: 420px;
       width: 100%;
       text-align: center;
       box-shadow: var(--shadow);
     }
+    .age-logo {
+      height: 56px;
+      width: auto;
+      margin: 0 auto 20px;
+      display: block;
+    }
     .age-card h2 {
       font-family: "Fraunces", serif;
-      font-size: 1.75rem;
+      font-size: 1.85rem;
+      font-weight: 600;
       margin-bottom: 12px;
+      color: var(--cream);
+      letter-spacing: -0.02em;
     }
-    .age-card p { color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
-    .age-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .age-card p {
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .age-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -125,21 +144,18 @@
       gap: 16px;
     }
     .logo {
-      font-family: "Fraunces", serif;
-      font-size: 1.55rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      text-decoration: none;
-      color: var(--cream);
       display: flex;
       align-items: center;
-      gap: 6px;
+      text-decoration: none;
+      line-height: 0;
     }
-    .logo span {
-      background: linear-gradient(135deg, var(--watermelon), var(--watermelon-soft));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .logo img {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
+    @media (min-width: 641px) {
+      .logo img { height: 48px; }
     }
     .nav {
       display: flex;
@@ -629,10 +645,11 @@
 <body>
 
   <!-- AGE GATE -->
-  <div id="age-gate">
+  <div id="age-gate" role="dialog" aria-modal="true" aria-labelledby="age-title">
     <div class="age-card">
-      <h2>18+ Only</h2>
-      <p>FINDit lists adult retail, services and events. By entering you confirm you are 18 years or older and of legal age in your location.</p>
+      <img src="FINDit.png" alt="FINDit" class="age-logo" width="180" height="56" />
+      <h2 id="age-title">18+ Only</h2>
+      <p>FINDit lists adult retail, shops, events &amp; sellers across South Africa. By entering you confirm you are 18 years or older and of legal age in your location.</p>
       <div class="age-btns">
         <button class="btn btn-primary" id="age-yes">I am 18 or older</button>
         <button class="btn btn-ghost" id="age-no">Exit</button>
@@ -643,7 +660,9 @@
   <!-- HEADER -->
   <header class="masthead">
     <div class="wrap masthead-inner">
-      <a href="#" class="logo" data-page="find">FIND<span>it</span></a>
+      <a href="#" class="logo" data-page="find" aria-label="FINDit home">
+        <img src="FINDit.png" alt="FINDit" width="180" height="48" />
+      </a>
       <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
       <nav class="nav" id="main-nav">
         <button data-page="about">About Us</button>
@@ -685,7 +704,7 @@
     <section id="page-about" class="page">
       <div class="content-block">
         <h1>About FINDit</h1>
-        <p>FINDit is a free, public web directory of adult retail stores, shops, events and sellers (new &amp; second-hand) across South Africa. Built by <strong>Jozi Nites</strong> as part of our wellness and education initiative.</p>
+        <p>FINDit is a free, public web directory of adult retail, shops, events and sellers across South Africa. All sellers, retailers, merchants, manufacturers, branding establishments &amp; service providers within BDSM communities are listed, welcomed &amp; encouraged to join in. Built by <strong>Jozi Nites</strong> as part of our wellness and education initiative.</p>
 
         <div class="disclaimer">
           <strong>Disclaimer:</strong> FINDit is a listing service only. We have no affiliation with any of the businesses or individuals listed. We do not endorse, verify quality of products/services, or take responsibility for any transactions that take place between users and listed parties. Always exercise caution and follow local laws.
@@ -696,7 +715,9 @@
           <li><strong>Retail</strong> — Online and physical adult stores</li>
           <li><strong>Shops</strong> — Boutiques, lingerie, fetish &amp; lifestyle stores</li>
           <li><strong>Events</strong> — Parties, workshops, expos, community gatherings</li>
-          <li><strong>Sellers</strong> — New &amp; second-hand individual sellers (registered / public only)</li>
+          <li><strong>Sellers</strong> — New &amp; second-hand sellers, merchants &amp; independent providers</li>
+          <li><strong>Manufacturers &amp; Branding</strong> — Local makers, labels and branding establishments</li>
+          <li><strong>Service Providers</strong> — Educators, mentors, venue hosts and community services within BDSM spaces</li>
         </ul>
 
         <h2>Terms &amp; Privacy (POPIA)</h2>
@@ -790,7 +811,7 @@
         <a href="#" data-page="find">Find It</a>
         <a href="#" data-page="contact">Contact</a>
       </div>
-      <p>FINDit lists public businesses only. No private individuals. Built by <a href="#" data-page="about">Jozi Nites</a> · Johannesburg, South Africa</p>
+      <p>All sellers, retailers, merchants, manufacturers, branding establishments &amp; service providers within BDSM communities are listed, welcomed &amp; encouraged to join in. Built by <a href="#" data-page="about">Jozi Nites</a> · Johannesburg, South Africa</p>
       <p style="margin-top:8px;opacity:0.7">18+ · Discretion · POPIA-aware</p>
     </div>
   </footer>
